@@ -23,11 +23,12 @@ npm start
 ## Running with Docker Compose
 
 This repository also provides a `docker-compose.yml` file that spins up the
-Flask backend and a development server for the React frontend. The compose
-setup expects that you have created the React application inside a
-`virtualvinyl/` directory as shown in the steps above.
+Flask backend and builds a React frontend automatically. The compose setup
+installs Python dependencies, generates a TypeScript React application, copies
+`react_frontend.tsx` into it and starts both development servers. No manual
+setup steps are required.
 
-Start both services with:
+Start both services with (use `--build` the first time to build the images):
 
 ```bash
 docker-compose up

@@ -1,0 +1,7 @@
+FROM node:18
+WORKDIR /app
+RUN npx create-react-app . --template typescript
+RUN npm install lucide-react
+COPY react_frontend.tsx src/App.tsx
+EXPOSE 3000
+CMD ["npm", "start"]
