@@ -12,20 +12,12 @@ python app.py
 
 ## Frontend setup
 
-```bash
-npx create-react-app virtual-vinyl-frontend --template typescript
-cd virtual-vinyl-frontend
-npm install lucide-react
-# Replace src/App.tsx with the React code
-npm start
-```
+_To define_
 
 ## Running with Docker Compose
 
 This repository also provides a `docker-compose.yml` file that spins up the
-Flask backend and builds a React frontend automatically. The compose setup
-installs Python dependencies, generates a TypeScript React application, copies
-`react_frontend.tsx` into it and starts both development servers. No manual
+Flask backend and the frontend automatically. No manual
 setup steps are required.
 
 Start both services with (use `--build` the first time to build the images):

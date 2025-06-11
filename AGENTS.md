@@ -11,16 +11,3 @@ pip install -r requirements.txt
 ```
 python app.py
 ```
-
-## Install the dependencies for the frotend
-
-```
-cd virtual-vinyl-frontend/
-npm install
-```
-
-# Run the frontend
-
-```
-npm start
-```
