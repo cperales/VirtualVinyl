@@ -6,7 +6,7 @@ This repository contains the code for the VirtualVinyl App. Instead of playing a
 ## Backend setup
 
 ```bash
-pip install -r requirements.xt
+pip install -r requirements.txt
 python app.py
 ```
 

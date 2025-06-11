@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Music, Play, Plus, X, Save } from 'lucide-react';
+import { Search, Music, Plus, X, Save } from 'lucide-react';
 
 const VirtualVinyl = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
