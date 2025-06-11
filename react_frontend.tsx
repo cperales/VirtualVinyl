@@ -1,12 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Music, Plus, X, Save } from 'lucide-react';
 
+interface Track {
+  id: string;
+  uri: string;
+  name: string;
+  duration_ms: number;
+  album: {
+    name: string;
+    images: { url: string }[];
+  };
+  artists: { name: string }[];
+}
+
 const VirtualVinyl = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [vinylTracks, setVinylTracks] = useState([]);
+  const [searchResults, setSearchResults] = useState<Track[]>([]);
+  const [vinylTracks, setVinylTracks] = useState<Track[]>([]);
   const [playlistName, setPlaylistName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   
@@ -85,7 +97,7 @@ const VirtualVinyl = () => {
     setIsLoading(false);
   };
 
-  const addToVinyl = (track) => {
+  const addToVinyl = (track: Track) => {
     if (vinylTracks.length >= 12) {
       alert('Maximum 12 tracks per vinyl!');
       return;
@@ -99,7 +111,7 @@ const VirtualVinyl = () => {
     setVinylTracks([...vinylTracks, track]);
   };
 
-  const removeFromVinyl = (trackId) => {
+  const removeFromVinyl = (trackId: string) => {
     setVinylTracks(vinylTracks.filter(t => t.id !== trackId));
   };
 
@@ -142,7 +154,7 @@ const VirtualVinyl = () => {
     setIsLoading(false);
   };
 
-  const formatDuration = (ms) => {
+  const formatDuration = (ms: number) => {
     const minutes = Math.floor(ms / 60000);
     const seconds = Math.floor((ms % 60000) / 1000);
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
