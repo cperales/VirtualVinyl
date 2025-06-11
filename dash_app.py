@@ -57,4 +57,6 @@ def create_playlist(n_clicks, track_uris):
 
 
 if __name__ == '__main__':
-    app.run_server(port=3000, debug=True)
+    # Dash removed the ``run_server`` helper in favor of ``run``. Use the
+    # new method so the app starts correctly.
+    app.run(port=3000, debug=True)
