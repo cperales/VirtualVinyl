@@ -13,9 +13,13 @@ interface Track {
   artists: { name: string }[];
 }
 
+interface SpotifyUser {
+  display_name: string;
+}
+
 const VirtualVinyl = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<SpotifyUser | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Track[]>([]);
   const [vinylTracks, setVinylTracks] = useState<Track[]>([]);
