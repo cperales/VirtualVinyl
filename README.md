@@ -1,6 +1,6 @@
 # VirtualVinyl
 
-This repository contains the code for VirtualVinyl
+This repository contains the code for the VirtualVinyl App. Instead of playing a long Spotify playlist, why not select a curated playlist of 8 to 12 songs to become your today's soundtrack?
 
 
 ## Backend setup
