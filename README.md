@@ -13,10 +13,10 @@ python app.py
 ## Frontend setup
 
 ```bash
-npx create-react-app virtualvinyl
-cd virtualvinyl
+npx create-react-app virtual-vinyl-frontend --template typescript
+cd virtual-vinyl-frontend
 npm install lucide-react
-# Replace src/App.js with the React code
+# Replace src/App.tsx with the React code
 npm start
 ```
 
