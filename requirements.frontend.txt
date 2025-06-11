@@ -1,2 +1,2 @@
-dash
-requests
+dash==3.0.4
+requests==2.32.4
