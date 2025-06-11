@@ -4,7 +4,6 @@ from flask_cors import CORS
 import requests
 import base64
 import secrets
-import os
 from urllib.parse import urlencode
 
 app = Flask(__name__)
