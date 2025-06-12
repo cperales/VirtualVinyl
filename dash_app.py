@@ -57,4 +57,4 @@ def create_playlist(n_clicks, track_uris):
 
 
 if __name__ == '__main__':
-    app.run_server(port=3000, debug=True)
+    app.run(port=3000, debug=True)
