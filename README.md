@@ -12,7 +12,14 @@ python app.py
 
 ## Frontend setup
 
-_To define_
+The repository now includes a simple Dash application that acts as the
+frontend. To run it locally without Docker, install the dependencies and
+start the Dash server:
+
+```bash
+pip install -r requirements.frontend.txt
+python dash_app.py
+```
 
 ## Running with Docker Compose
 

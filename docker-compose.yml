@@ -14,3 +14,7 @@ services:
       dockerfile: Dockerfile.frontend
     ports:
       - "3000:3000"
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_ENV=development

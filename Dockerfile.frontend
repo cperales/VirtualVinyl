@@ -1,0 +1,7 @@
+FROM python:3.12-slim
+WORKDIR /app
+COPY requirements.frontend.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+COPY dash_app.py dash_app.py
+EXPOSE 3000
+CMD ["python", "dash_app.py"]
