@@ -5,8 +5,10 @@
     - Select manually the songs to be included in the new playlist (virtual vinyl)
     - Create the new playlist, called "El vinilo de hoy".
 [ ] Create tests for the frontend
+[ ] Without resizing `img/vinyl.jpg`, reduce the resolution visualization the app
+
 
 # Bugs
 
 # Notes
-[ ] Redesigned Dash app to show a vinyl image and nicer styling
+[x] Redesigned Dash app to show a vinyl image and nicer styling
