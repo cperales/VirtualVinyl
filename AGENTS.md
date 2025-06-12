@@ -1,25 +1,13 @@
+# Installation
 
-## Install the dependencies for the backend
+Read `README.md` to set up the backend and the frontend.
 
-```
-pip install -U pip
-pip install -r requirements.txt
-```
+# Features and Bugs
 
-## Run the backend
+`TODO.md` summarizes the current features and bugs as described in. Each item is marked as `[ ]` for ongoin and `[x]` for solved, based on its current status.
 
-```
-python app.py
-```
+> **Note:** Please update the document `TODO.md`.
 
-## Install the dependencies for the frotend
+# Code Style
 
-```
-pip install -r requirements_frontend.txt
-```
-
-# Run the frontend
-
-```
-python dash_app.py
-```
+All code should adhere to [PEP8](https://www.python.org/dev/peps/pep-0008/) guidelines to ensure readability and maintainability.
