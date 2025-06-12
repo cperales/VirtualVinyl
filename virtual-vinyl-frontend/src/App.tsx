@@ -168,9 +168,11 @@ const VirtualVinyl = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
         <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 shadow-2xl text-center max-w-md">
-          <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-pink-500 to-violet-500 rounded-full flex items-center justify-center">
-            <Music className="w-12 h-12 text-white" />
-          </div>
+          <img
+            src="/img/vinyl.png"
+            alt="Vinyl"
+            className="w-24 h-24 mx-auto mb-6 rounded-full shadow-lg"
+          />
           <h1 className="text-3xl font-bold text-white mb-4">VirtualVinyl</h1>
           <p className="text-white/80 mb-8">Create vinyl-style playlists from your favorite tracks</p>
           <button
@@ -190,7 +192,7 @@ const VirtualVinyl = () => {
       <div className="bg-black/20 backdrop-blur-sm border-b border-white/10">
         <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-4">
-            <Music className="w-8 h-8 text-white" />
+            <img src="/img/vinyl.png" alt="Vinyl" className="w-8 h-8" />
             <h1 className="text-2xl font-bold text-white">VirtualVinyl</h1>
           </div>
           <div className="flex items-center space-x-4">
