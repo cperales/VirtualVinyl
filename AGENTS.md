@@ -15,12 +15,13 @@ python app.py
 ## Install the dependencies for the frotend
 
 ```
-cd virtual-vinyl-frontend/
-npm install
+pip install -r requirements_frontend.txt
 ```
 
 # Run the frontend
 
+It is not yet created, but it should be
+
 ```
-npm start
+python dash_app.py
 ```
