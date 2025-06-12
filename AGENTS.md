@@ -20,8 +20,6 @@ pip install -r requirements_frontend.txt
 
 # Run the frontend
 
-It is not yet created, but it should be
-
 ```
 python dash_app.py
 ```
