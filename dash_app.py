@@ -12,7 +12,7 @@ SPOTIFY_AUTH_URL = f"{BACKEND_URL}/login"
 
 external_stylesheets = [dbc.themes.SANDSTONE]
 app = dash.Dash(
-    __name__, assets_folder="img", external_stylesheets=external_stylesheets
+    __name__, assets_folder="docs/img", external_stylesheets=external_stylesheets
 )
 
 image_url = app.get_asset_url("vinyl.jpg")
