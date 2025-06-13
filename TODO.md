@@ -20,6 +20,7 @@
 [x] After logging in Spotify, I got `Missing required parameter; client_id`
 [x] "Invalid callback" error after login was caused by callback page dropping query parameters
 [x] After login Spotify OAuth succeeds but the callback returns `{"error": "Failed to get access token"}`. Ensure SPOTIFY_CLIENT_SECRET is set in the Lambda environment.
+[ ] Besides "Select Your Tracks" and pop up "Please select between 8 and 12 songs", it does not shows anything about playlist configuration.
 
 # Notes
 [x] Redesigned Dash app to show a vinyl image and nicer styling
