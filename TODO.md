@@ -10,7 +10,7 @@
 [x] Check [website](https://cperales.github.io/virtualvinyl) is active.
 [x] Convert the backend into an AWS Lambda function
 [x] Remove the Flask dependency from the backend
-[ ] Add more loggings in the backend, replace prints for loggings
+[x] Add more loggings in the backend, replace prints for loggings
 
 
 # Bugs
