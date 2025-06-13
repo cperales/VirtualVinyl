@@ -52,6 +52,12 @@ def test_search_requires_query():
     assert json.loads(response["body"]) == {"error": "Query parameter required"}
 
 
+def test_top_tracks_requires_auth():
+    response = invoke_lambda("/api/top-tracks")
+    assert response["statusCode"] == 401
+    assert json.loads(response["body"]) == {"error": "Not authenticated"}
+
+
 def test_create_playlist_invalid_track_count():
     session_id = "s2"
     app.SESSION_STORE[session_id] = {"access_token": "token"}
