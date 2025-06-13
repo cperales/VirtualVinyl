@@ -14,6 +14,7 @@
 
 # Bugs
 [x] After logging in Spotify, I got `Missing required parameter; client_id`
+[x] "Invalid callback" error after login was caused by callback page dropping query parameters
 
 # Notes
 [x] Redesigned Dash app to show a vinyl image and nicer styling
