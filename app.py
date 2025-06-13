@@ -4,15 +4,22 @@ import base64
 import json
 import os
 import secrets
+import logging
 from urllib.parse import urlencode
 import requests
+
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Load environment variables from .env file
 try:
     import dotenv
     dotenv.load_dotenv()
 except ImportError:
-    print("dotenv module not found, ensure you have it installed if using .env files.")
+    logger.warning(
+        "dotenv module not found, ensure you have it installed if using .env files."
+    )
 
 # Spotify App Credentials (replace with your actual credentials)
 CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
@@ -69,6 +76,7 @@ def get_auth_header(session):
 
 def login(event):
     """Initiate Spotify OAuth flow."""
+    logger.info("Starting login process")
     state = secrets.token_urlsafe(16)
     session_id = secrets.token_urlsafe(16)
     SESSION_STORE[session_id] = {"state": state}
@@ -84,6 +92,7 @@ def login(event):
         ),
     }
     auth_url = f"{SPOTIFY_AUTH_URL}?{urlencode(params)}"
+    logger.info("Redirecting user to Spotify for authentication")
     headers = {
         "Location": auth_url,
         "Set-Cookie": f"session_id={session_id}; Path=/; HttpOnly",
@@ -93,12 +102,14 @@ def login(event):
 
 def callback(event):
     """Handle Spotify OAuth callback."""
+    logger.info("Handling OAuth callback")
     params = event.get("queryStringParameters") or {}
     code = params.get("code")
     state = params.get("state")
 
     session_id, session = _get_session(event)
     if not code or not session or state != session.get("state"):
+        logger.error("Invalid OAuth callback parameters")
         return _create_response({"error": "Invalid callback"}, 400)
 
     auth_str = f"{CLIENT_ID}:{CLIENT_SECRET}"
@@ -113,6 +124,7 @@ def callback(event):
     token_data = response.json()
 
     if "access_token" in token_data:
+        logger.info("Successfully obtained access token")
         session["access_token"] = token_data["access_token"]
         session["refresh_token"] = token_data.get("refresh_token")
         headers = {
@@ -121,11 +133,13 @@ def callback(event):
         }
         return _create_response(status=302, headers=headers)
 
+    logger.error("Failed to obtain access token")
     return _create_response({"error": "Failed to get access token"}, 400)
 
 
 def get_user(event):
     """Get current user profile."""
+    logger.info("Fetching current user profile")
     _, session = _get_session(event)
     headers = get_auth_header(session)
     if not headers:
@@ -138,11 +152,13 @@ def get_user(event):
 def search_tracks(event):
     """Search for tracks."""
     _, session = _get_session(event)
+    logger.info("Searching tracks")
     headers = get_auth_header(session)
     if not headers:
         return _create_response({"error": "Not authenticated"}, 401)
 
     query = (event.get("queryStringParameters") or {}).get("q", "")
+    logger.info("Search query: %s", query)
     if not query:
         return _create_response({"error": "Query parameter required"}, 400)
 
@@ -154,6 +170,7 @@ def search_tracks(event):
 def create_playlist(event):
     """Create a new playlist and add tracks."""
     _, session = _get_session(event)
+    logger.info("Creating playlist")
     headers = get_auth_header(session)
     if not headers:
         return _create_response({"error": "Not authenticated"}, 401)
@@ -164,7 +181,9 @@ def create_playlist(event):
         data = {}
     playlist_name = data.get("name", "El vinilo de hoy")
     track_uris = data.get("track_uris", [])
+    logger.info("Playlist name: %s, number of tracks: %d", playlist_name, len(track_uris))
     if len(track_uris) < 8 or len(track_uris) > 12:
+        logger.error("Invalid number of tracks: %d", len(track_uris))
         return _create_response({"error": "Playlist must have 8-12 tracks"}, 400)
 
     user_resp = requests.get(f"{SPOTIFY_API_BASE_URL}/me", headers=headers)
@@ -181,6 +200,7 @@ def create_playlist(event):
         json=playlist_data,
     )
     if playlist_resp.status_code != 201:
+        logger.error("Failed to create playlist")
         return _create_response({"error": "Failed to create playlist"}, 400)
 
     playlist = playlist_resp.json()
@@ -192,7 +212,10 @@ def create_playlist(event):
         json=tracks_data,
     )
     if tracks_resp.status_code != 201:
+        logger.error("Failed to add tracks to playlist")
         return _create_response({"error": "Failed to add tracks to playlist"}, 400)
+
+    logger.info("Playlist created successfully: %s", playlist_id)
 
     return _create_response(
         {
@@ -206,6 +229,7 @@ def create_playlist(event):
 def auth_status(event):
     """Check if user is authenticated."""
     _, session = _get_session(event)
+    logger.debug("Checking authentication status")
     return _create_response({"authenticated": bool(session and "access_token" in session)})
 
 
@@ -214,6 +238,7 @@ def logout(event):
     session_id, session = _get_session(event)
     if session_id and session:
         SESSION_STORE.pop(session_id, None)
+        logger.info("Session %s logged out", session_id)
     headers = {"Set-Cookie": "session_id=; Path=/; Max-Age=0"}
     return _create_response({"message": "Logged out successfully"}, headers=headers)
 
@@ -225,6 +250,7 @@ def lambda_handler(event, context):
         event.get("requestContext", {}).get("http", {}).get("method")
         or event.get("httpMethod")
     )
+    logger.debug("Handling request %s %s", method, path)
     routes = {
         ("/login", "GET"): login,
         ("/callback", "GET"): callback,
