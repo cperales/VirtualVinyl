@@ -167,6 +167,23 @@ def search_tracks(event):
     return _create_response(response.json())
 
 
+def top_tracks(event):
+    """Return user's top tracks."""
+    _, session = _get_session(event)
+    logger.info("Fetching user's top tracks")
+    headers = get_auth_header(session)
+    if not headers:
+        return _create_response({"error": "Not authenticated"}, 401)
+
+    params = {"limit": 20}
+    resp = requests.get(f"{SPOTIFY_API_BASE_URL}/me/top/tracks", headers=headers, params=params)
+    if resp.status_code != 200:
+        logger.error("Failed to fetch top tracks")
+        return _create_response({"error": "Failed to fetch top tracks"}, 400)
+
+    return _create_response(resp.json())
+
+
 def create_playlist(event):
     """Create a new playlist and add tracks."""
     _, session = _get_session(event)
@@ -256,6 +273,7 @@ def lambda_handler(event, context):
         ("/callback", "GET"): callback,
         ("/api/user", "GET"): get_user,
         ("/api/search", "GET"): search_tracks,
+        ("/api/top-tracks", "GET"): top_tracks,
         ("/api/create-playlist", "POST"): create_playlist,
         ("/api/auth-status", "GET"): auth_status,
         ("/api/logout", "POST"): logout,

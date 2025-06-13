@@ -11,7 +11,7 @@
 [x] Convert the backend into an AWS Lambda function
 [x] Remove the Flask dependency from the backend
 [x] Add more loggings in the backend, replace prints for loggings
-[ ] After logging, the app should brings you to a website where
+[x] After logging, the app should brings you to a website where
     - User can select manually the songs from their most listened to be included in a new playist (called `Virtual Vinyl`)
     - A link appears to the new playlist
 
