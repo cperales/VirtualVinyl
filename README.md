@@ -10,13 +10,6 @@ pip install -r requirements.txt
 python app.py
 ```
 
-## Frontend setup
-
-```bash
-pip install -r requirements_frontend.txt
-python dash_app.py
-```
-
 ## Running with Docker Compose
 
 This repository also provides a `docker-compose.yml` file that spins up the
@@ -27,5 +20,4 @@ Start both services with (use `--build` the first time to build the images):
 docker-compose up
 ```
 
-The backend will be available on <http://localhost:5000> and the frontend on
-<http://localhost:3000>.
+The backend will be available on <http://localhost:5000>
