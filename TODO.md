@@ -6,7 +6,8 @@
     - Create the new playlist, called "El vinilo de hoy".
 [x] Create tests for the frontend
 [x] Without resizing `img/vinyl.jpg`, reduce the resolution visualization the app
-[ ] Use Githubs Pages to display the website. Transform Dash frontend into HTML/js if necessary
+[x] Use Githubs Pages to display the static website. Transform Dash frontend into HTML/js if necessary
+[ ] Check [website](https://cperales.github.io/virtualvinyl) is active.
 
 
 # Bugs

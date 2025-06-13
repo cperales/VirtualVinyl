@@ -18,7 +18,7 @@ CORS(app, supports_credentials=True)
 # Spotify App Credentials (replace with your actual credentials)
 CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
 CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET')
-REDIRECT_URI = 'https://cperales.github.io/virtualvinyl'
+REDIRECT_URI = 'https://cperales.gihtub.io/virtualvinyl/callback'  # Change to your actual redirect URI
 
 SPOTIFY_AUTH_URL = 'https://accounts.spotify.com/authorize'
 SPOTIFY_TOKEN_URL = 'https://accounts.spotify.com/api/token'

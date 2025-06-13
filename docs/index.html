@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Vinyl</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .vinyl-img {
+            width: 600px;
+            height: 400px;
+            object-fit: cover;
+        }
+        #login-status {
+            margin-top: 1em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Virtual Vinyl</h1>
+    <p>Create a curated playlist of 8 to 12 songs.</p>
+    <img src="img/vinyl.jpg" alt="Vinyl" class="vinyl-img">
+    <div>
+        <button id="login-btn">Login with Spotify</button>
+    </div>
+    <div id="login-status"></div>
+    <script>
+        const BACKEND_URL = 'http://localhost:5000';
+        document.getElementById('login-btn').addEventListener('click', () => {
+            window.open(`${BACKEND_URL}/login`, '_blank');
+            document.getElementById('login-status').textContent = 'Redirecting to Spotify login...';
+        });
+    </script>
+</body>
+</html>
