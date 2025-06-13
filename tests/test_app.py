@@ -3,11 +3,13 @@ from flask import session
 
 import app
 
+
 @pytest.fixture
 def client():
     app.app.config['TESTING'] = True
     with app.app.test_client() as client:
         yield client
+
 
 def test_get_auth_header_without_token():
     with app.app.test_request_context('/'):
@@ -45,7 +47,10 @@ def test_search_requires_query(client):
 def test_create_playlist_invalid_track_count(client):
     with client.session_transaction() as sess:
         sess['access_token'] = 'token'
-    response = client.post('/api/create-playlist', json={'track_uris': ['a', 'b']})
+    response = client.post(
+        '/api/create-playlist',
+        json={'track_uris': ['a', 'b']},
+    )
     assert response.status_code == 400
     assert response.get_json() == {'error': 'Playlist must have 8-12 tracks'}
 

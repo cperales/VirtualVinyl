@@ -29,6 +29,7 @@ app.layout = dbc.Container(
                 html.Img(
                     src=image_url,
                     className="img-fluid rounded shadow-sm",
+                    style={"maxWidth": "400px"},
                 ),
                 width="auto",
             ),
