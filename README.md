@@ -1,23 +1,8 @@
 # VirtualVinyl
 
-This repository contains the code for the VirtualVinyl App. Instead of playing a long Spotify playlist, why not select a curated playlist of 8 to 12 songs to become your today's soundtrack?
+This repository contains the code for the VirtualVinyl App. Instead of playing a long Spotify playlist, why not select a curated playlist of 8 to 12 songs to become your today's soundtrack? [Click here to discover](https://cperales.github.io/VirtualVinyl).
 
 
 ## Backend setup
 
-```bash
-pip install -r requirements.txt
-python app.py
-```
-
-## Running with Docker Compose
-
-This repository also provides a `docker-compose.yml` file that spins up the
-Flask backend and the Dash frontend automatically.
-Start both services with (use `--build` the first time to build the images):
-
-```bash
-docker-compose up
-```
-
-The backend will be available on <http://localhost:5000>
+The `app.py` file is uploaded at AWS as a lambda.
