@@ -7,6 +7,7 @@ import secrets
 from urllib.parse import urlencode
 import dotenv
 import os
+import awsgi
 
 # Load environment variables from .env file
 dotenv.load_dotenv()
@@ -191,3 +192,8 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+
+
+def lambda_handler(event, context):
+    """AWS Lambda entry point."""
+    return awsgi.response(app, event, context)
