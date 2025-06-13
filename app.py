@@ -116,7 +116,7 @@ def callback(event):
         session["access_token"] = token_data["access_token"]
         session["refresh_token"] = token_data.get("refresh_token")
         headers = {
-            "Location": "http://localhost:3000?auth=success",
+            "Location": "https://cperales.github.io/VirtualVinyl?auth=success",
             "Set-Cookie": f"session_id={session_id}; Path=/; HttpOnly",
         }
         return _create_response(status=302, headers=headers)
