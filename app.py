@@ -5,15 +5,20 @@ import requests
 import base64
 import secrets
 from urllib.parse import urlencode
+import dotenv
+import os
+
+# Load environment variables from .env file
+dotenv.load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key-here'  # Change this in production
 CORS(app, supports_credentials=True)
 
 # Spotify App Credentials (replace with your actual credentials)
-CLIENT_ID = 'your_spotify_client_id'
-CLIENT_SECRET = 'your_spotify_client_secret'
-REDIRECT_URI = 'http://localhost:5000/callback'
+CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
+CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET')
+REDIRECT_URI = 'https://cperales.github.io/virtualvinyl'
 
 SPOTIFY_AUTH_URL = 'https://accounts.spotify.com/authorize'
 SPOTIFY_TOKEN_URL = 'https://accounts.spotify.com/api/token'
