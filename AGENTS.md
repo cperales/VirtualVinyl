@@ -1,6 +1,9 @@
 # Installation
 
-Read `README.md` to set up the backend and the frontend.
+Read `README.md` to set up the backend and the frontend. The variables
+- `SPOTIFY_CLIENT_ID`
+- `SPOTIFY_CLIENT_SECRET`
+should be set in the environment
 
 # Features and Bugs
 
