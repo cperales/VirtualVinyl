@@ -19,3 +19,9 @@ SPOTIFY_CLIENT_SECRET=<your client secret>
 Make sure these variables are configured in the Lambda function or in a local
 `.env` file when running the backend locally. Missing credentials will lead to
 `Failed to get access token` errors during the OAuth callback.
+
+### Logging
+
+The backend now uses Python's `logging` module. Log messages are printed to
+standard output, viewable in CloudWatch when deployed on AWS Lambda or in the
+console during local development.
