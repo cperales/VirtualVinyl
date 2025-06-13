@@ -10,11 +10,13 @@
 [x] Check [website](https://cperales.github.io/virtualvinyl) is active.
 [x] Convert the backend into an AWS Lambda function
 [x] Remove the Flask dependency from the backend
+[ ] Add more loggings in the backend, replace prints for loggings
 
 
 # Bugs
 [x] After logging in Spotify, I got `Missing required parameter; client_id`
 [x] "Invalid callback" error after login was caused by callback page dropping query parameters
+[ ] After login Spotify OAuth succeeds but the callback returns `{"error": "Failed to get access token"}`. Ensure SPOTIFY_CLIENT_SECRET is set in the Lambda environment.
 
 # Notes
 [x] Redesigned Dash app to show a vinyl image and nicer styling
