@@ -1,199 +1,242 @@
 # app.py
-from flask import Flask, request, jsonify, redirect, session
-from flask_cors import CORS
-import requests
+"""AWS Lambda backend for VirtualVinyl without Flask."""
 import base64
+import json
+import os
 import secrets
 from urllib.parse import urlencode
-import dotenv
-import os
-import awsgi
+import requests
 
 # Load environment variables from .env file
-dotenv.load_dotenv()
-
-app = Flask(__name__)
-app.secret_key = 'your-secret-key-here'  # Change this in production
-CORS(app, supports_credentials=True)
+try:
+    import dotenv
+    dotenv.load_dotenv()
+except ImportError:
+    print("dotenv module not found, ensure you have it installed if using .env files.")
 
 # Spotify App Credentials (replace with your actual credentials)
-CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
-CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET')
-REDIRECT_URI = 'https://cperales.github.io/VirtualVinyl/callback'  # Change to your actual redirect URI
+CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
+CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
+REDIRECT_URI = os.getenv("LAMBDA_URL") + "/callback"
+print("Using REDIRECT_URI:", REDIRECT_URI)
 
-SPOTIFY_AUTH_URL = 'https://accounts.spotify.com/authorize'
-SPOTIFY_TOKEN_URL = 'https://accounts.spotify.com/api/token'
-SPOTIFY_API_BASE_URL = 'https://api.spotify.com/v1'
+SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize"
+SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token"
+SPOTIFY_API_BASE_URL = "https://api.spotify.com/v1"
+
+# In-memory session store for lambda usage
+SESSION_STORE = {}
 
 
-def get_auth_header():
-    """Get authorization header for Spotify API calls"""
-    if 'access_token' in session:
-        return {'Authorization': f'Bearer {session["access_token"]}'}
+def _parse_cookies(header):
+    """Parse cookie header into a dictionary."""
+    cookies = {}
+    if not header:
+        return cookies
+    for item in header.split(";"):
+        if "=" in item:
+            k, v = item.split("=", 1)
+            cookies[k.strip()] = v
+    return cookies
+
+
+def _get_session(event):
+    """Retrieve session dict based on session_id cookie."""
+    headers = event.get("headers") or {}
+    cookie_header = headers.get("cookie") or headers.get("Cookie")
+    cookies = _parse_cookies(cookie_header)
+    session_id = cookies.get("session_id")
+    if session_id and session_id in SESSION_STORE:
+        return session_id, SESSION_STORE[session_id]
+    return None, None
+
+
+def _create_response(body="", status=200, headers=None):
+    """Create a standard lambda proxy response."""
+    if headers is None:
+        headers = {}
+    if isinstance(body, (dict, list)):
+        body = json.dumps(body)
+        headers.setdefault("Content-Type", "application/json")
+    return {"statusCode": status, "headers": headers, "body": body}
+
+
+def get_auth_header(session):
+    """Get authorization header for Spotify API calls."""
+    if session and "access_token" in session:
+        return {"Authorization": f"Bearer {session['access_token']}"}
     return None
 
 
-@app.route('/login')
-def login():
-    """Initiate Spotify OAuth flow"""
+def login(event):
+    """Initiate Spotify OAuth flow."""
     state = secrets.token_urlsafe(16)
-    session['state'] = state
+    session_id = secrets.token_urlsafe(16)
+    SESSION_STORE[session_id] = {"state": state}
 
     params = {
-        'client_id': CLIENT_ID,
-        'response_type': 'code',
-        'redirect_uri': REDIRECT_URI,
-        'state': state,
-        'scope': (
-            'user-read-private user-read-email playlist-modify-public '
-            'playlist-modify-private user-library-read'
+        "client_id": CLIENT_ID,
+        "response_type": "code",
+        "redirect_uri": REDIRECT_URI,
+        "state": state,
+        "scope": (
+            "user-read-private user-read-email playlist-modify-public "
+            "playlist-modify-private user-library-read"
         ),
     }
-
     auth_url = f"{SPOTIFY_AUTH_URL}?{urlencode(params)}"
-    return redirect(auth_url)
+    headers = {
+        "Location": auth_url,
+        "Set-Cookie": f"session_id={session_id}; Path=/; HttpOnly",
+    }
+    return _create_response(status=302, headers=headers)
 
 
-@app.route('/callback')
-def callback():
-    """Handle Spotify OAuth callback"""
-    code = request.args.get('code')
-    state = request.args.get('state')
+def callback(event):
+    """Handle Spotify OAuth callback."""
+    params = event.get("queryStringParameters") or {}
+    code = params.get("code")
+    state = params.get("state")
 
-    if not code or state != session.get('state'):
-        return jsonify({'error': 'Invalid callback'}), 400
+    session_id, session = _get_session(event)
+    if not code or not session or state != session.get("state"):
+        return _create_response({"error": "Invalid callback"}, 400)
 
-    # Exchange code for access token
     auth_str = f"{CLIENT_ID}:{CLIENT_SECRET}"
-    auth_bytes = auth_str.encode('ascii')
-    auth_b64 = base64.b64encode(auth_bytes).decode('ascii')
+    auth_b64 = base64.b64encode(auth_str.encode("ascii")).decode("ascii")
 
     headers = {
-        'Authorization': f'Basic {auth_b64}',
-        'Content-Type': 'application/x-www-form-urlencoded',
+        "Authorization": f"Basic {auth_b64}",
+        "Content-Type": "application/x-www-form-urlencoded",
     }
-
-    data = {
-        'grant_type': 'authorization_code',
-        'code': code,
-        'redirect_uri': REDIRECT_URI,
-    }
-
+    data = {"grant_type": "authorization_code", "code": code, "redirect_uri": REDIRECT_URI}
     response = requests.post(SPOTIFY_TOKEN_URL, headers=headers, data=data)
     token_data = response.json()
 
-    if 'access_token' in token_data:
-        session['access_token'] = token_data['access_token']
-        session['refresh_token'] = token_data.get('refresh_token')
-        return redirect('http://localhost:3000?auth=success')
+    if "access_token" in token_data:
+        session["access_token"] = token_data["access_token"]
+        session["refresh_token"] = token_data.get("refresh_token")
+        headers = {
+            "Location": "http://localhost:3000?auth=success",
+            "Set-Cookie": f"session_id={session_id}; Path=/; HttpOnly",
+        }
+        return _create_response(status=302, headers=headers)
 
-    return jsonify({'error': 'Failed to get access token'}), 400
+    return _create_response({"error": "Failed to get access token"}, 400)
 
 
-@app.route('/api/user')
-def get_user():
-    """Get current user profile"""
-    headers = get_auth_header()
+def get_user(event):
+    """Get current user profile."""
+    _, session = _get_session(event)
+    headers = get_auth_header(session)
     if not headers:
-        return jsonify({'error': 'Not authenticated'}), 401
+        return _create_response({"error": "Not authenticated"}, 401)
 
     response = requests.get(f"{SPOTIFY_API_BASE_URL}/me", headers=headers)
-    return jsonify(response.json())
+    return _create_response(response.json())
 
 
-@app.route('/api/search')
-def search_tracks():
-    """Search for tracks"""
-    headers = get_auth_header()
+def search_tracks(event):
+    """Search for tracks."""
+    _, session = _get_session(event)
+    headers = get_auth_header(session)
     if not headers:
-        return jsonify({'error': 'Not authenticated'}), 401
+        return _create_response({"error": "Not authenticated"}, 401)
 
-    query = request.args.get('q', '')
+    query = (event.get("queryStringParameters") or {}).get("q", "")
     if not query:
-        return jsonify({'error': 'Query parameter required'}), 400
+        return _create_response({"error": "Query parameter required"}, 400)
 
-    params = {'q': query, 'type': 'track', 'limit': 20}
-
-    response = requests.get(
-        f"{SPOTIFY_API_BASE_URL}/search", headers=headers, params=params
-    )
-    return jsonify(response.json())
+    params = {"q": query, "type": "track", "limit": 20}
+    response = requests.get(f"{SPOTIFY_API_BASE_URL}/search", headers=headers, params=params)
+    return _create_response(response.json())
 
 
-@app.route('/api/create-playlist', methods=['POST'])
-def create_playlist():
-    """Create a new playlist and add tracks"""
-    headers = get_auth_header()
+def create_playlist(event):
+    """Create a new playlist and add tracks."""
+    _, session = _get_session(event)
+    headers = get_auth_header(session)
     if not headers:
-        return jsonify({'error': 'Not authenticated'}), 401
+        return _create_response({"error": "Not authenticated"}, 401)
 
-    data = request.json
-    playlist_name = data.get('name', 'El vinilo de hoy')
-    track_uris = data.get('track_uris', [])
-
+    try:
+        data = json.loads(event.get("body") or "{}")
+    except json.JSONDecodeError:
+        data = {}
+    playlist_name = data.get("name", "El vinilo de hoy")
+    track_uris = data.get("track_uris", [])
     if len(track_uris) < 8 or len(track_uris) > 12:
-        return jsonify({'error': 'Playlist must have 8-12 tracks'}), 400
+        return _create_response({"error": "Playlist must have 8-12 tracks"}, 400)
 
-    # Get user ID
-    user_response = requests.get(f"{SPOTIFY_API_BASE_URL}/me", headers=headers)
-    user_id = user_response.json().get('id')
+    user_resp = requests.get(f"{SPOTIFY_API_BASE_URL}/me", headers=headers)
+    user_id = user_resp.json().get("id")
 
-    # Create playlist
     playlist_data = {
-        'name': playlist_name,
-        'description': 'Created with VirtualVinyl - A vinyl-inspired playlist',
-        'public': False,
+        "name": playlist_name,
+        "description": "Created with VirtualVinyl - A vinyl-inspired playlist",
+        "public": False,
     }
-
-    playlist_response = requests.post(
+    playlist_resp = requests.post(
         f"{SPOTIFY_API_BASE_URL}/users/{user_id}/playlists",
-        headers={**headers, 'Content-Type': 'application/json'},
+        headers={**headers, "Content-Type": "application/json"},
         json=playlist_data,
     )
+    if playlist_resp.status_code != 201:
+        return _create_response({"error": "Failed to create playlist"}, 400)
 
-    if playlist_response.status_code != 201:
-        return jsonify({'error': 'Failed to create playlist'}), 400
-
-    playlist = playlist_response.json()
-    playlist_id = playlist['id']
-
-    # Add tracks to playlist
-    tracks_data = {'uris': track_uris}
-    tracks_response = requests.post(
+    playlist = playlist_resp.json()
+    playlist_id = playlist["id"]
+    tracks_data = {"uris": track_uris}
+    tracks_resp = requests.post(
         f"{SPOTIFY_API_BASE_URL}/playlists/{playlist_id}/tracks",
-        headers={**headers, 'Content-Type': 'application/json'},
+        headers={**headers, "Content-Type": "application/json"},
         json=tracks_data,
     )
+    if tracks_resp.status_code != 201:
+        return _create_response({"error": "Failed to add tracks to playlist"}, 400)
 
-    if tracks_response.status_code != 201:
-        return jsonify({'error': 'Failed to add tracks to playlist'}), 400
-
-    return jsonify(
+    return _create_response(
         {
-            'playlist_id': playlist_id,
-            'playlist_url': playlist['external_urls']['spotify'],
-            'message': 'Virtual vinyl created successfully!',
+            "playlist_id": playlist_id,
+            "playlist_url": playlist["external_urls"]["spotify"],
+            "message": "Virtual vinyl created successfully!",
         }
     )
 
 
-@app.route('/api/auth-status')
-def auth_status():
-    """Check if user is authenticated"""
-    return jsonify({'authenticated': 'access_token' in session})
+def auth_status(event):
+    """Check if user is authenticated."""
+    _, session = _get_session(event)
+    return _create_response({"authenticated": bool(session and "access_token" in session)})
 
 
-@app.route('/api/logout', methods=['POST'])
-def logout():
-    """Logout user"""
-    session.clear()
-    return jsonify({'message': 'Logged out successfully'})
-
-
-if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+def logout(event):
+    """Logout user."""
+    session_id, session = _get_session(event)
+    if session_id and session:
+        SESSION_STORE.pop(session_id, None)
+    headers = {"Set-Cookie": "session_id=; Path=/; Max-Age=0"}
+    return _create_response({"message": "Logged out successfully"}, headers=headers)
 
 
 def lambda_handler(event, context):
     """AWS Lambda entry point."""
-    return awsgi.response(app, event, context)
+    path = event.get("rawPath") or event.get("path")
+    method = (
+        event.get("requestContext", {}).get("http", {}).get("method")
+        or event.get("httpMethod")
+    )
+    routes = {
+        ("/login", "GET"): login,
+        ("/callback", "GET"): callback,
+        ("/api/user", "GET"): get_user,
+        ("/api/search", "GET"): search_tracks,
+        ("/api/create-playlist", "POST"): create_playlist,
+        ("/api/auth-status", "GET"): auth_status,
+        ("/api/logout", "POST"): logout,
+    }
+    handler = routes.get((path, method))
+    if handler:
+        return handler(event)
+    return _create_response({"error": "Not found"}, 404)
+
