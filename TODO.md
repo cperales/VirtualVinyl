@@ -6,9 +6,11 @@
     - Create the new playlist, called "El vinilo de hoy".
 [x] Create tests for the frontend
 [x] Without resizing `img/vinyl.jpg`, reduce the resolution visualization the app
+[ ] Use Githubs Pages to display the website
 
 
 # Bugs
+[ ] _In progress by @cperales_ After logging in Spotify, I got `Missing required parameter; client_id`
 
 # Notes
 [x] Redesigned Dash app to show a vinyl image and nicer styling
