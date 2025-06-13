@@ -9,6 +9,7 @@
 [x] Use Githubs Pages to display the static website. Transform Dash frontend into HTML/js if necessary
 [ ] Check [website](https://cperales.github.io/virtualvinyl) is active.
 [x] Convert the backend into an AWS Lambda function
+[x] Remove the Flask dependency from the backend
 
 
 # Bugs
