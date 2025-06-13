@@ -3,7 +3,11 @@
 Read `README.md` to set up the backend and the frontend. The variables
 - `SPOTIFY_CLIENT_ID`
 - `SPOTIFY_CLIENT_SECRET`
-should be set in the environment
+should be set in the environment.
+
+Modifications for `docs/` folder (the frontend) are deployed in [the website](https://cperales.github.io/VirtualVinyl) using Github Pages.
+
+Modifications for `app.py` (the backend) are deployed in the [AWS Lambda](https://xrzlv3xlqqgaor44hhddzfrxui0xefxc.lambda-url.us-east-1.on.aws)
 
 # Features and Bugs
 

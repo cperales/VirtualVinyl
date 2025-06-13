@@ -3,7 +3,7 @@
 [x] Update the `app.py` to allow the user to select the songs for the virtual vinyl. The use of this app is
     - User logs in into Spotify
     - Select manually the songs to be included in the new playlist (virtual vinyl)
-    - Create the new playlist, called "El vinilo de hoy".
+    - Create the new playlist, called "Virtual Vinyl".
 [x] Create tests for the frontend
 [x] Without resizing `img/vinyl.jpg`, reduce the resolution visualization the app
 [x] Use Githubs Pages to display the static website. Transform Dash frontend into HTML/js if necessary
@@ -11,6 +11,9 @@
 [x] Convert the backend into an AWS Lambda function
 [x] Remove the Flask dependency from the backend
 [x] Add more loggings in the backend, replace prints for loggings
+[ ] After logging, the app should brings you to a website where
+    - User can select manually the songs from their most listened to be included in a new playist (called `Virtual Vinyl`)
+    - A link appears to the new playlist
 
 
 # Bugs
