@@ -7,7 +7,7 @@
 [x] Create tests for the frontend
 [x] Without resizing `img/vinyl.jpg`, reduce the resolution visualization the app
 [x] Use Githubs Pages to display the static website. Transform Dash frontend into HTML/js if necessary
-[ ] Check [website](https://cperales.github.io/virtualvinyl) is active.
+[x] Check [website](https://cperales.github.io/virtualvinyl) is active.
 [x] Convert the backend into an AWS Lambda function
 [x] Remove the Flask dependency from the backend
 
