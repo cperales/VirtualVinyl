@@ -1,99 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Virtual Vinyl</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 20px;
-        }
-        .vinyl-img {
-            width: 600px;
-            height: 400px;
-            object-fit: cover;
-        }
-        #login-status {
-            margin-top: 1em;
-        }
-    </style>
-</head>
-<body>
-    <h1>Virtual Vinyl</h1>
-    <p>Create a curated playlist of 8 to 12 songs.</p>
-    <img src="img/vinyl.jpg" alt="Vinyl" class="vinyl-img">
-    <div id="login-section">
-        <button id="login-btn">Login with Spotify</button>
-        <div id="login-status"></div>
-    </div>
-
-    <div id="selection-section" style="display:none;">
-        <h2>Select Your Tracks</h2>
-        <div id="track-selection"></div>
-        <button id="create-btn">Create Playlist</button>
-        <div id="playlist-link"></div>
-    </div>
-    <script>
-        const BACKEND_URL = 'https://xrzlv3xlqqgaor44hhddzfrxui0xefxc.lambda-url.us-east-1.on.aws';
-        document.getElementById('login-btn').addEventListener('click', () => {
-            window.open(`${BACKEND_URL}/login`, '_blank');
-            document.getElementById('login-status').textContent = 'Redirecting to Spotify login...';
-        });
-
-        function fetchTopTracks() {
-            fetch(`${BACKEND_URL}/api/top-tracks`, { credentials: 'include' })
-                .then(r => r.json())
-                .then(d => showTracks(d.items || []));
-        }
-
-        function showTracks(tracks) {
-            const cont = document.getElementById('track-selection');
-            cont.innerHTML = '';
-            tracks.forEach(t => {
-                const div = document.createElement('div');
-                const cb = document.createElement('input');
-                cb.type = 'checkbox';
-                cb.value = t.uri;
-                div.appendChild(cb);
-                div.appendChild(document.createTextNode(` ${t.name} - ${t.artists[0].name}`));
-                cont.appendChild(div);
-            });
-        }
-
-        function createPlaylist() {
-            const selected = Array.from(document.querySelectorAll('#track-selection input:checked')).map(cb => cb.value);
-            if (selected.length < 8 || selected.length > 12) {
-                alert('Please select between 8 and 12 songs.');
-                return;
-            }
-            fetch(`${BACKEND_URL}/api/create-playlist`, {
-                method: 'POST',
-                credentials: 'include',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ track_uris: selected })
-            })
-            .then(r => r.json())
-            .then(d => {
-                const linkDiv = document.getElementById('playlist-link');
-                if (d.playlist_url) {
-                    linkDiv.innerHTML = `<a href="${d.playlist_url}" target="_blank">Open your new playlist</a>`;
-                } else {
-                    linkDiv.textContent = 'Failed to create playlist';
-                }
-            });
-        }
-
-        document.getElementById('create-btn').addEventListener('click', createPlaylist);
-
-        window.addEventListener('load', () => {
-            if (new URLSearchParams(window.location.search).get('auth') === 'success') {
-                document.getElementById('login-section').style.display = 'none';
-                document.getElementById('selection-section').style.display = 'block';
-                fetchTopTracks();
-            }
-        });
-    </script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OpenVinAIl - Vintage Playlist Creator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <script type="module" crossorigin src="/assets/index-Bo-AI6Qj.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-Dr6jkUJv.css">
+  </head>
+  <body>
+    <div id="app"></div>
+  </body>
 </html>
