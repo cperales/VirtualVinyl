@@ -1,0 +1,8 @@
+# Enable rewrite engine
+RewriteEngine On
+
+# Handle Vue Router (HTML5 History Mode)
+# Redirect all requests to index.html for SPA routing
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^.*$ /index.html [L,QSA]
