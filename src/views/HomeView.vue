@@ -1,14 +1,15 @@
 <template>
 	<div class="home-container">
-		<header class="home-header">
-			<div class="header-content">
+                <header class="home-header">
+                        <div class="header-content">
 				<h1 class="page-title">Your Vinyl Collection</h1>
 				<div class="user-info" v-if="user">
 					<span>Welcome, {{ user.display_name }}</span>
 					<button @click="handleLogout" class="logout-btn">Sign Out</button>
 				</div>
-			</div>
-		</header>
+                        </div>
+                </header>
+                <p v-if="playerError" class="player-error">{{ playerError }}</p>
 
 		<main class="main-content">
 			<!-- Search Section -->
@@ -110,9 +111,6 @@
 				</div>
 			</div>
 
-			<!-- Audio element for preview playback -->
-			<audio v-if="currentTrack.preview_url" ref="audioPlayer" :src="currentTrack.preview_url"
-				@ended="handleTrackEnded" @loadstart="handleAudioLoad" @error="handleAudioError"></audio>
 		</div>
 
 		<!-- Playlist Creation Dialog -->
@@ -131,21 +129,21 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, nextTick } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useSpotify } from '../composables/useSpotify'
 
 const router = useRouter()
 const {
-	isAuthenticated,
-	user,
-	topTracks,
-	selectedTracks,
-	searchResults,
-	isSearching,
-	currentTrack,
-	isPlaying,
-	logout,
+        user,
+        topTracks,
+        selectedTracks,
+        searchResults,
+        isSearching,
+        currentTrack,
+        isPlaying,
+        playerError,
+        logout,
 	getCurrentUser,
 	getTopTracks,
 	toggleTrackSelection,
@@ -162,7 +160,6 @@ const showPlaylistDialog = ref(false)
 const playlistName = ref('')
 const searchQuery = ref('')
 const searchTimeout = ref(null)
-const audioPlayer = ref(null)
 
 // Computed property to determine which tracks to display
 const currentTracks = computed(() => {
@@ -239,53 +236,22 @@ const clearSearchInput = () => {
 }
 
 const handlePlayTrack = async (track) => {
-	if (currentTrack.value?.id === track.id) {
-		// Toggle play/pause for current track
-		handlePlayPause()
-	} else {
-		// Play new track
-		const success = await playTrack(track)
-		if (success) {
-			await nextTick()
-			if (audioPlayer.value && track.preview_url) {
-				try {
-					await audioPlayer.value.play()
-				} catch (error) {
-					console.error('Error playing audio:', error)
-				}
-			}
-		}
-	}
+        if (currentTrack.value?.id === track.id) {
+                handlePlayPause()
+        } else {
+                await playTrack(track)
+        }
 }
 
 const handlePlayPause = async () => {
-	if (!audioPlayer.value) return
-
-	if (isPlaying.value) {
-		audioPlayer.value.pause()
-		pauseTrack()
-	} else {
-		try {
-			await audioPlayer.value.play()
-			resumeTrack()
-		} catch (error) {
-			console.error('Error playing audio:', error)
-		}
-	}
+        if (isPlaying.value) {
+                await pauseTrack()
+        } else {
+                await resumeTrack()
+        }
 }
 
-const handleTrackEnded = () => {
-	pauseTrack()
-}
 
-const handleAudioLoad = () => {
-	// Audio is loading
-}
-
-const handleAudioError = () => {
-	console.error('Error loading audio preview')
-	pauseTrack()
-}
 
 onMounted(async () => {
 	await getCurrentUser()
@@ -765,8 +731,15 @@ onMounted(async () => {
 }
 
 .no-results p:first-child {
-	font-size: 1.3rem;
-	color: #DEB887;
+        font-size: 1.3rem;
+        color: #DEB887;
+}
+
+.player-error {
+        color: #ff8080;
+        text-align: center;
+        margin-top: 1rem;
+        font-family: 'Crimson Text', serif;
 }
 
 @keyframes fadeIn {

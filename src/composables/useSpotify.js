@@ -20,9 +20,38 @@ const isSearching = ref(false)
 const currentTrack = ref(null)
 const isPlaying = ref(false)
 const playerReady = ref(false)
+const playerError = ref('')
+const deviceId = ref(null)
+let player = null
 
 export function useSpotify() {
   const isAuthenticated = computed(() => !!spotifyApi.value)
+
+  const setupPlayer = () => {
+    if (!window.Spotify || player) return
+    player = new window.Spotify.Player({
+      name: 'VirtualVinyl',
+      getOAuthToken: cb => cb(spotifyApi.value.getAccessToken())
+    })
+
+    player.addListener('ready', ({ device_id }) => {
+      deviceId.value = device_id
+      playerReady.value = true
+      spotifyApi.value.player.transferPlayback([device_id], true).catch(() => {})
+    })
+
+    const setError = ({ message }) => {
+      playerError.value = message
+    }
+
+    player.addListener('initialization_error', setError)
+    player.addListener('authentication_error', setError)
+    player.addListener('account_error', () => {
+      playerError.value = 'Premium account required'
+    })
+
+    player.connect()
+  }
 
   	onMounted(() => {
 		spotifyApi.value = SpotifyApi.withUserAuthorization(
@@ -50,7 +79,6 @@ export function useSpotify() {
     // Check if we're on the callback URL with authorization code
     const urlParams = new URLSearchParams(window.location.search)
     const code = urlParams.get('code')
-    const state = urlParams.get('state')
     
     if (code) {
       try {
@@ -63,6 +91,7 @@ export function useSpotify() {
         
         // The SDK should handle the callback automatically
         await spotifyApi.value.authenticate()
+        setupPlayer()
         
         // Clean up URL
         window.history.replaceState({}, document.title, window.location.pathname)
@@ -84,9 +113,10 @@ export function useSpotify() {
       
       // Try to get current user to validate existing session
       await spotifyApi.value.currentUser.profile()
+      setupPlayer()
       return true
     } catch (error) {
-      // No valid session
+      console.error('Session validation failed:', error)
       spotifyApi.value = null
       return false
     }
@@ -188,15 +218,13 @@ export function useSpotify() {
   }
 
   const playTrack = async (track) => {
-    if (!spotifyApi.value) return false
-    
+    if (!spotifyApi.value || !deviceId.value) return false
+
     try {
       // Set current track for display
       currentTrack.value = track
       isPlaying.value = true
-      
-      // Note: For preview playback, we'll use the track's preview_url
-      // Full playback requires Spotify Premium and Web Playback SDK
+      await spotifyApi.value.player.startResumePlayback(deviceId.value, undefined, [track.uri])
       return true
     } catch (error) {
       console.error('Error playing track:', error)
@@ -204,19 +232,24 @@ export function useSpotify() {
     }
   }
 
-  const pauseTrack = () => {
+  const pauseTrack = async () => {
+    if (!spotifyApi.value || !deviceId.value) return
+    await spotifyApi.value.player.pausePlayback(deviceId.value).catch(() => {})
     isPlaying.value = false
   }
 
-  const resumeTrack = () => {
-    if (currentTrack.value) {
-      isPlaying.value = true
-    }
+  const resumeTrack = async () => {
+    if (!spotifyApi.value || !deviceId.value || !currentTrack.value) return
+    await spotifyApi.value.player.startResumePlayback(deviceId.value)
+    isPlaying.value = true
   }
 
   const stopTrack = () => {
     currentTrack.value = null
     isPlaying.value = false
+    if (spotifyApi.value && deviceId.value) {
+      spotifyApi.value.player.pausePlayback(deviceId.value).catch(() => {})
+    }
   }
 
   return {
@@ -229,6 +262,7 @@ export function useSpotify() {
     currentTrack,
     isPlaying,
     playerReady,
+    playerError,
     login,
     logout,
     handleCallback,
