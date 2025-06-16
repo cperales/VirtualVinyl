@@ -199,11 +199,12 @@ const handleCreatePlaylist = async () => {
 	}
 
         try {
+                const trackCount = selectedTracks.value.length
                 const playlist = await createPlaylist(playlistName.value)
                 if (playlist) {
                         showPlaylistDialog.value = false
                         playlistName.value = ''
-                        alert(`Playlist "${playlist.name}" created successfully with ${selectedTracks.value.length} tracks!`)
+                        alert(`Playlist "${playlist.name}" created successfully with ${trackCount} tracks!`)
                         if (playlist.external_urls && playlist.external_urls.spotify) {
                                 window.open(playlist.external_urls.spotify, '_blank')
                         }
