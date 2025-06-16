@@ -1,27 +1,35 @@
-# VirtualVinyl
+# openVinAIl
 
-This repository contains the code for the VirtualVinyl App. Instead of playing a long Spotify playlist, why not select a curated playlist of 8 to 12 songs to become your today's soundtrack? [Click here to discover](https://cperales.github.io/VirtualVinyl).
+This template should help get you started developing with Vue 3 in Vite.
 
+## Recommended IDE Setup
 
-## Backend setup
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
 
-The `app.py` file is uploaded at AWS as a lambda.
+## Customize configuration
 
-### Environment variables
+See [Vite Configuration Reference](https://vite.dev/config/).
 
-The backend requires two Spotify credentials provided as environment variables:
+## Project Setup
 
+```sh
+npm install
 ```
-SPOTIFY_CLIENT_ID=<your client id>
-SPOTIFY_CLIENT_SECRET=<your client secret>
+
+### Compile and Hot-Reload for Development
+
+```sh
+npm run dev
 ```
 
-Make sure these variables are configured in the Lambda function or in a local
-`.env` file when running the backend locally. Missing credentials will lead to
-`Failed to get access token` errors during the OAuth callback.
+### Compile and Minify for Production
 
-### Logging
+```sh
+npm run build
+```
 
-The backend now uses Python's `logging` module. Log messages are printed to
-standard output, viewable in CloudWatch when deployed on AWS Lambda or in the
-console during local development.
+### Lint with [ESLint](https://eslint.org/)
+
+```sh
+npm run lint
+```
