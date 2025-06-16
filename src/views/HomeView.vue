@@ -198,12 +198,13 @@ const handleCreatePlaylist = async () => {
 		return
 	}
 
-	try {
-		const playlist = await createPlaylist(playlistName.value)
-		if (playlist) {
-			showPlaylistDialog.value = false
-			playlistName.value = ''
-			alert(`Playlist "${playlist.name}" created successfully with ${selectedTracks.value.length} tracks!`)
+        try {
+                const trackCount = selectedTracks.value.length
+                const playlist = await createPlaylist(playlistName.value)
+                if (playlist) {
+                        showPlaylistDialog.value = false
+                        playlistName.value = ''
+                        alert(`Playlist "${playlist.name}" created successfully with ${trackCount} tracks!`)
 		} else {
 			alert('Failed to create playlist. Please try again.')
 		}
