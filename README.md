@@ -33,3 +33,9 @@ npm run build
 ```sh
 npm run lint
 ```
+
+### View on GitHub Pages
+
+After pushing to the `main` branch, the project is automatically built
+and deployed using GitHub Actions. You can access the live site at
+<https://cperales.github.io/VirtualVinyl>.
