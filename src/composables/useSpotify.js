@@ -145,7 +145,7 @@ export function useSpotify() {
         user.value.id,
         {
           name,
-          description: 'Created with OpenVinAIl',
+          description: 'Created with VirtualVinyl',
           public: false
         }
       )
