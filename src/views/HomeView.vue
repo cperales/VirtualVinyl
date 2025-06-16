@@ -198,19 +198,22 @@ const handleCreatePlaylist = async () => {
 		return
 	}
 
-	try {
-		const playlist = await createPlaylist(playlistName.value)
-		if (playlist) {
-			showPlaylistDialog.value = false
-			playlistName.value = ''
-			alert(`Playlist "${playlist.name}" created successfully with ${selectedTracks.value.length} tracks!`)
-		} else {
-			alert('Failed to create playlist. Please try again.')
-		}
-	} catch (error) {
-		console.error('Error creating playlist:', error)
-		alert('An error occurred while creating the playlist. Please try again.')
-	}
+        try {
+                const playlist = await createPlaylist(playlistName.value)
+                if (playlist) {
+                        showPlaylistDialog.value = false
+                        playlistName.value = ''
+                        alert(`Playlist "${playlist.name}" created successfully with ${selectedTracks.value.length} tracks!`)
+                        if (playlist.external_urls && playlist.external_urls.spotify) {
+                                window.open(playlist.external_urls.spotify, '_blank')
+                        }
+                } else {
+                        alert('Failed to create playlist. Please try again.')
+                }
+        } catch (error) {
+                console.error('Error creating playlist:', error)
+                alert('An error occurred while creating the playlist. Please try again.')
+        }
 }
 
 const handleSearchInput = () => {
