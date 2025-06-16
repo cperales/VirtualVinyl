@@ -205,13 +205,16 @@ const handleCreatePlaylist = async () => {
                         showPlaylistDialog.value = false
                         playlistName.value = ''
                         alert(`Playlist "${playlist.name}" created successfully with ${trackCount} tracks!`)
-		} else {
-			alert('Failed to create playlist. Please try again.')
-		}
-	} catch (error) {
-		console.error('Error creating playlist:', error)
-		alert('An error occurred while creating the playlist. Please try again.')
-	}
+                        if (playlist.external_urls && playlist.external_urls.spotify) {
+                                window.open(playlist.external_urls.spotify, '_blank')
+                        }
+                } else {
+                        alert('Failed to create playlist. Please try again.')
+                }
+        } catch (error) {
+                console.error('Error creating playlist:', error)
+                alert('An error occurred while creating the playlist. Please try again.')
+        }
 }
 
 const handleSearchInput = () => {
