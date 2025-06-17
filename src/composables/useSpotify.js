@@ -122,8 +122,10 @@ export function useSpotify() {
     topTracks.value = []
     selectedTracks.value = []
 
-    // Clear any stored tokens (SDK handles this internally)
-    localStorage.removeItem('spotify-sdk')
+    // Clear any stored tokens from the SDK
+    Object.keys(localStorage)
+      .filter((key) => key.startsWith('spotify-sdk'))
+      .forEach((key) => localStorage.removeItem(key))
   }
 
   const getCurrentUser = async () => {
