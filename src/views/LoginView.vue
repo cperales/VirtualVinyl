@@ -12,9 +12,14 @@
 		<div class="login-card">
 			<h2>Connect Your Music</h2>
 			<p>Sign in with Spotify to discover your top tracks and create vintage playlists</p>
-			<button @click="handleLogin" class="spotify-btn">
-				<span class="spotify-icon">♪</span>
+			<button @click="handleSpotifyLogin" class="platform-btn spotify-btn">
+				<span class="platform-icon spotify-icon">♪</span>
 				Connect with Spotify
+			</button>
+
+			<button @click="handleTidalLogin" class="platform-btn tidal-btn">
+				<span class="platform-icon tidal-icon">▶</span>
+				Connect with TIDAL
 			</button>
 		</div>
 	</div>
@@ -26,10 +31,27 @@ import { useRouter } from 'vue-router'
 import { useSpotify } from '../composables/useSpotify'
 
 const router = useRouter()
-const { login, isAuthenticated, handleCallback } = useSpotify()
+const { 
+	login: spotifyLogin, 
+	isAuthenticated: isSpotifyAuthenticated, 
+	handleCallback: handleSpotifyCallback 
+} = useSpotify()
 
-const handleLogin = async () => {
-	const success = await login()
+const { 
+	login: tidalLogin, 
+	isAuthenticated: isTidalAuthenticated, 
+	handleCallback: handleTidalCallback 
+} = useTidal()
+
+const handleSpotifyLogin = async () => {
+	const success = await spotifyLogin()
+	if (success) {
+		router.push('/home')
+	}
+}
+
+const handleTidalLogin = async () => {
+	const success = await tidalLogin()
 	if (success) {
 		router.push('/home')
 	}
@@ -37,9 +59,15 @@ const handleLogin = async () => {
 
 onMounted(async () => {
 	// Check if we're returning from Spotify auth
-	const callbackHandled = await handleCallback()
+	const spotifyCallbackHandled = await handleSpotifyCallback()
+	if (spotifyCallbackHandled || isSpotifyAuthenticated.value) {
+		router.push('/home')
+		return
+	}
 
-	if (callbackHandled || isAuthenticated.value) {
+	// Check if we're returning from TIDAL auth
+	const tidalCallbackHandled = await handleTidalCallback()
+	if (tidalCallbackHandled || isTidalAuthenticated.value) {
 		router.push('/home')
 	}
 })

@@ -5,6 +5,7 @@
 				<h1 class="page-title">Your Vinyl Collection</h1>
 				<div class="user-info" v-if="user">
 					<span>Welcome, {{ user.display_name }}</span>
+					<span class="service-badge">{{ serviceName }}</span>
 					<button @click="handleLogout" class="logout-btn">Sign Out</button>
 				</div>
                         </div>
@@ -15,8 +16,9 @@
 			<!-- Search Section -->
 			<div class="search-section">
 				<div class="search-container">
-					<input v-model="searchQuery" @input="handleSearchInput" placeholder="Search for songs on Spotify..."
-						class="search-input" />
+					<input v-model="searchQuery" @input="handleSearchInput" 
+  :placeholder="'Search for songs on ' + (spotifyService.isAuthenticated ? 'Spotify' : 'TIDAL') + '...'"
+  class="search-input" />
 					<button v-if="searchQuery" @click="clearSearchInput" class="clear-search-btn">
 						✕
 					</button>
