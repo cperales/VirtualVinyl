@@ -1,6 +1,6 @@
 # Virtual Vinyl
 
-This template should help get you started developing with Vue 3 in Vite.
+This repository contains the code for **Virtual Vinyl**. Instead of playing a long Spotify playlist, why not select a curated playlist of 8 to 12 songs to become your today's soundtrack? [Click here to discover](https://cperales.github.io/VirtualVinyl).
 
 ## Recommended IDE Setup
 
