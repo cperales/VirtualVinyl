@@ -30,7 +30,7 @@ export function useSpotify() {
   const setupPlayer = () => {
     if (!window.Spotify || player) return
     player = new window.Spotify.Player({
-      name: 'VirtualVinyl',
+      name: 'Virtual Vinyl',
       getOAuthToken: (cb) => cb(spotifyApi.value.getAccessToken()),
     })
 
@@ -167,7 +167,7 @@ export function useSpotify() {
     try {
       const playlist = await spotifyApi.value.playlists.createPlaylist(user.value.id, {
         name,
-        description: 'Created with VirtualVinyl',
+        description: 'Created with Virtual Vinyl',
         public: false,
       })
 

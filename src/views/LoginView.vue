@@ -3,7 +3,7 @@
 		<div class="vinyl-record">
 			<div class="vinyl-center">
 				<div class="vinyl-label">
-					<h1 class="app-title">VirtualVinyl</h1>
+                                        <h1 class="app-title">Virtual Vinyl</h1>
 					<p class="app-subtitle">Vintage Playlist Creator</p>
 				</div>
 			</div>
