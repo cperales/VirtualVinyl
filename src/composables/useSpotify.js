@@ -170,7 +170,7 @@ export function useSpotify() {
     isSearching.value = true
     
     try {
-      const response = await spotifyApi.value.search(query, ['track'], 'US', 50)
+      const response = await spotifyApi.value.search(query, ['track'], 'ES', 50)
       searchResults.value = response.tracks.items
       return response.tracks.items
     } catch (error) {
