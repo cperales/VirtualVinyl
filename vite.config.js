@@ -16,8 +16,12 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  test: {
+    globals: true,
+    environment: 'jsdom'
+  },
   server: {
     port: 3000,
-	allowedHosts: ['famous-definite-sailfish.ngrok-free.app']
+        allowedHosts: ['famous-definite-sailfish.ngrok-free.app']
   }
 })

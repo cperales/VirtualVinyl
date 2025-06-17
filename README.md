@@ -34,6 +34,12 @@ npm run build
 npm run lint
 ```
 
+## Test with vitest
+
+```sh
+npx vitest run
+```
+
 ### View on GitHub Pages
 
 After pushing to the `main` branch, the project is automatically built
