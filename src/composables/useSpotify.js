@@ -2,7 +2,7 @@ import { ref, computed, onMounted } from 'vue'
 import { SpotifyApi } from '@spotify/web-api-ts-sdk'
 
 const CLIENT_ID = '766875441cc149e79ed8aff4fb1be351' // Replace with your Spotify Client ID
-const REDIRECT_URI = 'https://cperales.github.io/VirtualVinyl'
+const REDIRECT_URI = 'https://cperales.github.io/VirtualVinyl/callback'
 const SCOPES = [
   'user-read-private',
   'user-read-email',
