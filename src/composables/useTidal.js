@@ -192,6 +192,15 @@ export function useTidal() {
     }
   }
 
+  const toggleTrackSelection = (track) => {
+    const index = selectedTracks.value.findIndex((t) => t.id === track.id)
+    if (index > -1) {
+      selectedTracks.value.splice(index, 1)
+    } else if (selectedTracks.value.length < 10) {
+      selectedTracks.value.push(track)
+    }
+  }
+
   const logout = () => {
     tidalApi.value = null
     user.value = null
@@ -208,6 +217,7 @@ export function useTidal() {
     logout,
     searchTracks,
     createPlaylist,
+    toggleTrackSelection,
     topTracks,
     selectedTracks,
     searchResults,
