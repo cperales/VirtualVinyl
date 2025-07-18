@@ -39,7 +39,7 @@ with col2:
         st.write("TIDAL authenticated")
 
 # Handle code from URL params
-code = st.experimental_get_query_params().get("code")
+code = st.query_params.get("code")
 if code and not sp.is_authenticated():
     sp.handle_callback(code[0])
 if code and not td.is_authenticated():

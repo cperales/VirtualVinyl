@@ -1,7 +1,19 @@
 import os
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
+from dotenv import load_dotenv
+import logging
 
+load_dotenv(dotenv_path='.env',
+            verbose=True,
+            override=True)
+
+SPOTIFY_CLIENT_API = os.getenv('SPOTIFY_CLIENT_API')
+logging.warning("SPOTIFY_CLIENT_API: %s", SPOTIFY_CLIENT_API)
+SPOTIFY_SECRET_API = os.getenv('SPOTIFY_SECRET_API')
+logging.warning("SPOTIFY_SECRET_API: %s", SPOTIFY_SECRET_API)
+REDIRECT_URI = os.getenv('REDIRECT_URI')
+logging.warning("REDIRECT_URI: %s", REDIRECT_URI)
 
 class SpotifyClient:
     """Minimal wrapper around spotipy for Virtual Vinyl."""
@@ -9,9 +21,9 @@ class SpotifyClient:
     def __init__(self):
         self.client = None
         self.auth_manager = SpotifyOAuth(
-            client_id=os.getenv('CLIENT_ID'),
-            client_secret=os.getenv('CLIENT_SECRET'),
-            redirect_uri=os.getenv('REDIRECT_URI'),
+            client_id=SPOTIFY_CLIENT_API,
+            client_secret=SPOTIFY_SECRET_API,
+            redirect_uri=REDIRECT_URI,
             scope='user-read-private user-read-email user-top-read playlist-modify-public playlist-modify-private',
             open_browser=False,
         )
