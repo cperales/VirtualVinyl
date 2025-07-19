@@ -1,0 +1,10 @@
+.github/
+env/
+public/
+src/
+tests/
+.cache/
+.editorconfig
+.htaccess
+*.json
+*.js
