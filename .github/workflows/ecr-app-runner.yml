@@ -12,7 +12,6 @@ permissions:
 env:
   AWS_REGION: us-east-1
   ECR_REPOSITORY: virtualvinyl
-  APP_RUNNER_SERVICE: virtualvinyl-service
 
 jobs:
   deploy:
@@ -34,21 +33,9 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t $ECR_REPOSITORY:$GITHUB_SHA .
-          docker tag $ECR_REPOSITORY:$GITHUB_SHA ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:$GITHUB_SHA
+          docker build -t $ECR_REPOSITORY:latest .
+          docker tag $ECR_REPOSITORY:latest ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:latest
 
       - name: Push Docker image
         run: |
-          docker push ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:$GITHUB_SHA
-
-      - name: Deploy to App Runner
-        run: |
-          SERVICE_ARN=$(aws apprunner list-services --query "ServiceSummaryList[?ServiceName=='$APP_RUNNER_SERVICE'].ServiceArn" --output text)
-          if [ -z "$SERVICE_ARN" ]; then
-            aws apprunner create-service \
-              --service-name $APP_RUNNER_SERVICE \
-              --source-configuration ImageRepository="{ImageIdentifier=${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:$GITHUB_SHA,ImageRepositoryType=ECR}" \
-              --auto-deployments-enabled
-          else
-            aws apprunner start-deployment --service-arn $SERVICE_ARN
-          fi
+          docker push ${{ steps.login-ecr.outputs.registry }}/$ECR_REPOSITORY:latest
