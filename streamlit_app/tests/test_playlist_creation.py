@@ -10,8 +10,8 @@ def reload_module(module_name):
 
 
 def test_create_playlist(monkeypatch):
-    monkeypatch.setenv("SPOTIFY_CLIENT_API", "cid")
-    monkeypatch.setenv("SPOTIFY_SECRET_API", "secret")
+    monkeypatch.setenv("SPOTIPY_CLIENT_ID", "cid")
+    monkeypatch.setenv("SPOTIPY_CLIENT_SECRET", "secret")
     monkeypatch.setenv("REDIRECT_URI", "http://localhost/callback")
     sc = reload_module("streamlit_app.spotify_client")
     client = sc.SpotifyClient()

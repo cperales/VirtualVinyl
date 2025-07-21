@@ -21,7 +21,9 @@ class TidalClient:
             "state": state,
             "scope": "r_usr w_usr r_sub w_sub",
         }
-        query = "&".join(f"{k}={requests.utils.quote(str(v))}" for k, v in params.items())
+        query = "&".join(
+            f"{k}={requests.utils.quote(str(v))}" for k, v in params.items()
+        )
         return f"https://login.tidal.com/authorize?{query}"
 
     def handle_callback(self, code):
@@ -61,7 +63,11 @@ class TidalClient:
                 "Authorization": f"Bearer {self.access_token}",
                 "Content-Type": "application/json",
             },
-            json={"title": name, "description": "Created with Virtual Vinyl", "visibility": "PRIVATE"},
+            json={
+                "title": name,
+                "description": "Created with Virtual Vinyl",
+                "visibility": "PRIVATE",
+            },
         )
         if not resp.ok:
             return None
