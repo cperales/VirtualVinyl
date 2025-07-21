@@ -15,15 +15,16 @@ REDIRECT_URI = os.getenv("REDIRECT_URI")
 if not SPOTIPY_CLIENT_ID or not SPOTIPY_CLIENT_SECRET:
     logging.warning("Spotify credentials are not fully set")
 
-
 class SpotifyClient:
     """Minimal wrapper around spotipy for Virtual Vinyl."""
 
     def __init__(self):
+        if not all([SPOTIFY_CLIENT_API, SPOTIFY_SECRET_API, REDIRECT_URI]):
+            raise Exception("Missing Spotify credentials")
         self.client = None
         self.auth_manager = SpotifyOAuth(
-            client_id=SPOTIPY_CLIENT_ID,
-            client_secret=SPOTIPY_CLIENT_SECRET,
+            client_id=SPOTIFY_CLIENT_API,
+            client_secret=SPOTIFY_SECRET_API,
             redirect_uri=REDIRECT_URI,
             scope=(
                 'user-read-private user-read-email user-top-read '

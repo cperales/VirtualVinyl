@@ -71,6 +71,14 @@ Set the following environment variables for authentication:
 streamlit run streamlit_app/app.py
 ```
 
+### Flask Version
+
+You can also run the web interface with Flask:
+
+```sh
+flask --app flask_app.app run
+```
+
 ### Python Tests
 
 Run the Streamlit backend tests with `pytest`:
