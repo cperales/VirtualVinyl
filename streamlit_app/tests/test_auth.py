@@ -13,8 +13,8 @@ def reload_module(module_name):
 
 
 def test_spotify_oauth_url(monkeypatch):
-    monkeypatch.setenv("SPOTIFY_CLIENT_API", "cid")
-    monkeypatch.setenv("SPOTIFY_SECRET_API", "secret")
+    monkeypatch.setenv("SPOTIPY_CLIENT_ID", "cid")
+    monkeypatch.setenv("SPOTIPY_CLIENT_SECRET", "secret")
     monkeypatch.setenv("REDIRECT_URI", "http://localhost/callback")
     sc = reload_module("streamlit_app.spotify_client")
     client = sc.SpotifyClient()
@@ -40,12 +40,12 @@ def test_tidal_oauth_url(monkeypatch):
 
 
 def test_spotify_missing_credentials(monkeypatch):
-    monkeypatch.delenv("SPOTIFY_CLIENT_API", raising=False)
-    monkeypatch.delenv("SPOTIFY_SECRET_API", raising=False)
+    monkeypatch.delenv("SPOTIPY_CLIENT_ID", raising=False)
+    monkeypatch.delenv("SPOTIPY_CLIENT_SECRET", raising=False)
     monkeypatch.delenv("REDIRECT_URI", raising=False)
     sc = reload_module("streamlit_app.spotify_client")
-    sc.SPOTIFY_CLIENT_API = ""
-    sc.SPOTIFY_SECRET_API = ""
+    sc.SPOTIPY_CLIENT_ID = ""
+    sc.SPOTIPY_CLIENT_SECRET = ""
     sc.REDIRECT_URI = ""
     with pytest.raises(Exception):
         sc.SpotifyClient()
