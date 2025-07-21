@@ -2,3 +2,4 @@ streamlit
 spotipy
 requests
 dash
+python-dotenv
