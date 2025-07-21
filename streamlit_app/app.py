@@ -55,8 +55,9 @@ if sp.is_authenticated():
         tracks = st.session_state.tracks
 
     for t in tracks:
-        cols = st.columns([4,1])
-        cols[0].write(f"{t['name']} - {', '.join(a['name'] for a in t['artists'])}")
+        cols = st.columns([4, 1])
+        artists = ', '.join(a['name'] for a in t['artists'])
+        cols[0].write(f"{t['name']} - {artists}")
         if st.button("Select", key=t['id']):
             pl.toggle_track({"id": t['id'], "uri": t['uri']})
 
@@ -69,5 +70,3 @@ if sp.is_authenticated():
             st.success(f"Created playlist {playlist['name']}")
             st.write(playlist.get('external_urls', {}).get('spotify'))
             pl.selected_tracks = []
-
-
