@@ -6,7 +6,7 @@ import logging
 
 load_dotenv(dotenv_path='.env',
             verbose=True,
-            override=True)
+            override=False)
 
 SPOTIPY_CLIENT_ID = os.getenv('SPOTIPY_CLIENT_ID')
 logging.warning("SPOTIPY_CLIENT_ID: %s", SPOTIPY_CLIENT_ID)
