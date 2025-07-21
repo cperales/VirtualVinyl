@@ -70,3 +70,11 @@ Set the following environment variables for authentication:
 ```sh
 streamlit run streamlit_app/app.py
 ```
+
+### Python Tests
+
+Run the Streamlit backend tests with `pytest`:
+
+```sh
+pytest
+```
