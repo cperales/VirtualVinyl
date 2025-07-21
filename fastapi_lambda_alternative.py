@@ -1,6 +1,6 @@
 # lambda_function.py - FastAPI version for AWS Lambda
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from mangum import Mangum
 import os
@@ -142,10 +142,19 @@ async def home():
 @app.get("/auth/spotify")
 async def spotify_login():
     auth_url = spotify_auth.get_authorize_url()
-    return {"auth_url": auth_url}
+    # Redirect the user directly to Spotify's authorization URL
+    return RedirectResponse(auth_url)
+
+@app.get("/auth/callback")
+async def spotify_callback_redirect(code: str):
+    """Handle Spotify redirect by forwarding the code to the front-end."""
+    # Redirect back to the home page with the authorization code
+    return RedirectResponse(url=f"/?code={code}")
+
 
 @app.post("/auth/callback")
 async def spotify_callback(request: Request):
+    """Exchange authorization code for an access token."""
     data = await request.json()
     code = data.get("code")
     token_info = spotify_auth.get_access_token(code)
