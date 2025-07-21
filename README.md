@@ -60,7 +60,7 @@ pip install -r requirements.txt
 
 Set the following environment variables for authentication:
 
-- `CLIENT_ID` and `CLIENT_SECRET` – Spotify credentials
+- `SPOTIPY_CLIENT_ID` and `SPOTIPY_CLIENT_SECRET` – Spotify credentials
 - `REDIRECT_URI` – Spotify redirect URI
 - `TIDAL_CLIENT_ID` – TIDAL application id
 - `TIDAL_REDIRECT_URI` – TIDAL redirect URI
