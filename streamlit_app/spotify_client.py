@@ -15,6 +15,7 @@ logging.warning("SPOTIPY_CLIENT_SECRET: %s", SPOTIPY_CLIENT_SECRET)
 REDIRECT_URI = os.getenv('REDIRECT_URI')
 logging.warning("REDIRECT_URI: %s", REDIRECT_URI)
 
+
 class SpotifyClient:
     """Minimal wrapper around spotipy for Virtual Vinyl."""
 
@@ -24,7 +25,10 @@ class SpotifyClient:
             client_id=SPOTIPY_CLIENT_ID,
             client_secret=SPOTIPY_CLIENT_SECRET,
             redirect_uri=REDIRECT_URI,
-            scope='user-read-private user-read-email user-top-read playlist-modify-public playlist-modify-private',
+            scope=(
+                'user-read-private user-read-email user-top-read '
+                'playlist-modify-public playlist-modify-private'
+            ),
             open_browser=False,
         )
 
