@@ -1,0 +1,14 @@
+<div class="track" hx-target="this" hx-swap="outerHTML">
+  <span>{{ current['name'] }} - {{ ', '.join(a['name'] for a in current.get('artists', [])) }}</span>
+  <form hx-post="{{ url_for('routes.toggle') }}" hx-target="closest div" hx-swap="outerHTML">
+    <input type="hidden" name="id" value="{{ current['id'] }}">
+    <input type="hidden" name="uri" value="{{ current['uri'] }}">
+    <input type="hidden" name="name" value="{{ current['name'] }}">
+    <input type="hidden" name="artists" value="{{ ', '.join(a['name'] for a in current.get('artists', [])) }}">
+    {% if current['id'] in selected_ids %}
+    <button type="submit">Remove</button>
+    {% else %}
+    <button type="submit">Add</button>
+    {% endif %}
+  </form>
+</div>

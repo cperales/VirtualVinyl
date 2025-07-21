@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Virtual Vinyl</h1>
+
+{% if not sp_authenticated %}
+  <a href="{{ url_for('routes.login_spotify') }}">Login with Spotify</a>
+{% else %}
+  <input type="text" name="q" placeholder="Search" hx-get="{{ url_for('routes.search') }}" hx-target="#results" hx-trigger="keyup changed delay:500ms">
+  <div id="results"></div>
+  <form method="post" action="{{ url_for('routes.create_playlist') }}">
+    <input type="text" name="name" placeholder="Playlist name">
+    <button type="submit">Create Playlist</button>
+  </form>
+{% endif %}
+{% endblock %}

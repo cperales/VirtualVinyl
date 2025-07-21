@@ -3,3 +3,9 @@ spotipy==2.25.1
 requests==2.32.4
 python-dotenv==1.1.1
 dash==3.1.1
+flask==3.0.3
+flask-session==0.8.0
+# The following are frontend libraries referenced by the templates
+# They are optional since they are loaded via CDN
+# htmx
+# alpinejs

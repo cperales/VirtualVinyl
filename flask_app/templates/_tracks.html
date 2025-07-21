@@ -1,0 +1,5 @@
+{% for track in tracks %}
+  {% set selected_ids = [t['id'] for t in selected] %}
+  {% set current = track %}
+  {% include '_track.html' %}
+{% endfor %}
