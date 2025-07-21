@@ -2,50 +2,6 @@
 
 This repository contains the code for **Virtual Vinyl**. Instead of playing a long Spotify playlist, why not select a curated playlist of 8 to 12 songs to become your today's soundtrack? [Click here to discover](https://cperales.github.io/VirtualVinyl).
 
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
-
-## Test with vitest
-
-```sh
-npx vitest run
-```
-
-### View on GitHub Pages
-
-After pushing to the `main` branch, the project is automatically built
-and deployed using GitHub Actions. You can access the live site at
-<https://cperales.github.io/VirtualVinyl>.
-
 ## Streamlit App
 
 A basic Streamlit interface reproduces the Virtual Vinyl experience in Python.
@@ -69,4 +25,24 @@ Set the following environment variables for authentication:
 
 ```sh
 streamlit run streamlit_app/app.py
+```
+
+## Dash App
+
+A Plotly Dash interface providing the same functionality as the Streamlit version.
+
+### Setup
+
+Use the same Python environment as for the Streamlit app:
+
+```sh
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+### Run
+
+```sh
+python -m dash_app.app
 ```
