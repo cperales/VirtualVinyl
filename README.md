@@ -70,3 +70,23 @@ Set the following environment variables for authentication:
 ```sh
 streamlit run streamlit_app/app.py
 ```
+
+## Dash App
+
+A Plotly Dash interface providing the same functionality as the Streamlit version.
+
+### Setup
+
+Use the same Python environment as for the Streamlit app:
+
+```sh
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+### Run
+
+```sh
+python dash_app/app.py
+```
