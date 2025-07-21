@@ -6,7 +6,7 @@ import logging
 
 load_dotenv(dotenv_path='.env',
             verbose=True,
-            override=True)
+            override=False)
 
 SPOTIFY_CLIENT_API = os.getenv('SPOTIFY_CLIENT_API')
 logging.warning("SPOTIFY_CLIENT_API: %s", SPOTIFY_CLIENT_API)

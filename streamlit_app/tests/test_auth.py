@@ -44,6 +44,9 @@ def test_spotify_missing_credentials(monkeypatch):
     monkeypatch.delenv("SPOTIFY_SECRET_API", raising=False)
     monkeypatch.delenv("REDIRECT_URI", raising=False)
     sc = reload_module("streamlit_app.spotify_client")
+    sc.SPOTIFY_CLIENT_API = ""
+    sc.SPOTIFY_SECRET_API = ""
+    sc.REDIRECT_URI = ""
     with pytest.raises(Exception):
         sc.SpotifyClient()
 
