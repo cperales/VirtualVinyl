@@ -8,12 +8,12 @@ load_dotenv(dotenv_path='.env',
             verbose=True,
             override=False)
 
-SPOTIPY_CLIENT_ID = os.getenv('SPOTIPY_CLIENT_ID')
-logging.warning("SPOTIPY_CLIENT_ID: %s", SPOTIPY_CLIENT_ID)
-SPOTIPY_CLIENT_SECRET = os.getenv('SPOTIPY_CLIENT_SECRET')
-logging.warning("SPOTIPY_CLIENT_SECRET: %s", SPOTIPY_CLIENT_SECRET)
-REDIRECT_URI = os.getenv('REDIRECT_URI')
-logging.warning("REDIRECT_URI: %s", REDIRECT_URI)
+SPOTIPY_CLIENT_ID = os.getenv("SPOTIPY_CLIENT_ID")
+SPOTIPY_CLIENT_SECRET = os.getenv("SPOTIPY_CLIENT_SECRET")
+REDIRECT_URI = os.getenv("REDIRECT_URI")
+
+if not SPOTIPY_CLIENT_ID or not SPOTIPY_CLIENT_SECRET:
+    logging.warning("Spotify credentials are not fully set")
 
 class SpotifyClient:
     """Minimal wrapper around spotipy for Virtual Vinyl."""
