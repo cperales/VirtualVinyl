@@ -10,8 +10,8 @@ COPY streamlit_app ./streamlit_app
 
 # Copy environment variables (make sure to create this file)
 # COPY .env ./
-ENV SPOTIFY_CLIENT_API=YOUR_CLIENT_API
-ENV SPOTIFY_CLIENT_SECRET=YOUR_CLIENT_SECRET
+ENV SPOTIPY_CLIENT_ID=YOUR_CLIENT_ID
+ENV SPOTIPY_CLIENT_SECRET=YOUR_CLIENT_SECRET
 ENV REDIRECT_URI=URL
 
 # Set Streamlit configuration
