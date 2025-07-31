@@ -1,23 +1,18 @@
-import importlib
 import urllib.parse
-import sys
 from unittest.mock import Mock
 
 import pytest
-
-
-def reload_module(module_name):
-    if module_name in sys.modules:
-        return importlib.reload(sys.modules[module_name])
-    return importlib.import_module(module_name)
+from streamlit_app.spotify_client import SpotifyClient
+from streamlit_app.tidal_client import TidalClient
+import streamlit_app.spotify_client as sc_module
+import streamlit_app.tidal_client as tc_module
 
 
 def test_spotify_oauth_url(monkeypatch):
-    monkeypatch.setenv("SPOTIPY_CLIENT_ID", "cid")
-    monkeypatch.setenv("SPOTIPY_CLIENT_SECRET", "secret")
-    monkeypatch.setenv("REDIRECT_URI", "http://localhost/callback")
-    sc = reload_module("streamlit_app.spotify_client")
-    client = sc.SpotifyClient()
+    monkeypatch.setattr(sc_module, "SPOTIPY_CLIENT_ID", "cid")
+    monkeypatch.setattr(sc_module, "SPOTIPY_CLIENT_SECRET", "secret")
+    monkeypatch.setattr(sc_module, "REDIRECT_URI", "http://localhost/callback")
+    client = SpotifyClient()
     url = client.login_url()
     parsed = urllib.parse.urlparse(url)
     qs = urllib.parse.parse_qs(parsed.query)
@@ -26,10 +21,9 @@ def test_spotify_oauth_url(monkeypatch):
 
 
 def test_tidal_oauth_url(monkeypatch):
-    monkeypatch.setenv("TIDAL_CLIENT_ID", "tidal123")
-    monkeypatch.setenv("TIDAL_REDIRECT_URI", "http://local/cb")
-    tc = reload_module("streamlit_app.tidal_client")
-    client = tc.TidalClient()
+    monkeypatch.setattr(tc_module, "TIDAL_CLIENT_ID", "tidal123")
+    monkeypatch.setattr(tc_module, "TIDAL_REDIRECT_URI", "http://local/cb")
+    client = TidalClient()
     url = client.login_url("abc")
     parsed = urllib.parse.urlparse(url)
     qs = urllib.parse.parse_qs(parsed.query)
@@ -40,21 +34,16 @@ def test_tidal_oauth_url(monkeypatch):
 
 
 def test_spotify_missing_credentials(monkeypatch):
-    monkeypatch.delenv("SPOTIPY_CLIENT_ID", raising=False)
-    monkeypatch.delenv("SPOTIPY_CLIENT_SECRET", raising=False)
-    monkeypatch.delenv("REDIRECT_URI", raising=False)
-    sc = reload_module("streamlit_app.spotify_client")
-    sc.SPOTIPY_CLIENT_ID = ""
-    sc.SPOTIPY_CLIENT_SECRET = ""
-    sc.REDIRECT_URI = ""
+    monkeypatch.setattr(sc_module, "SPOTIPY_CLIENT_ID", "")
+    monkeypatch.setattr(sc_module, "SPOTIPY_CLIENT_SECRET", "")
+    monkeypatch.setattr(sc_module, "REDIRECT_URI", "")
     with pytest.raises(Exception):
-        sc.SpotifyClient()
+        SpotifyClient()
 
 
 def test_tidal_missing_credentials(monkeypatch):
-    monkeypatch.delenv("TIDAL_CLIENT_ID", raising=False)
-    monkeypatch.delenv("TIDAL_REDIRECT_URI", raising=False)
-    tc = reload_module("streamlit_app.tidal_client")
-    client = tc.TidalClient()
+    monkeypatch.setattr(tc_module, "TIDAL_CLIENT_ID", "")
+    monkeypatch.setattr(tc_module, "TIDAL_REDIRECT_URI", "")
+    client = TidalClient()
     assert isinstance(client.login_url("state"), str)
     assert not client.is_authenticated()

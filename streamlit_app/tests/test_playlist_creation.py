@@ -1,20 +1,14 @@
-import importlib
-import sys
 from unittest.mock import Mock
 
-
-def reload_module(module_name):
-    if module_name in sys.modules:
-        return importlib.reload(sys.modules[module_name])
-    return importlib.import_module(module_name)
+from streamlit_app.spotify_client import SpotifyClient
+import streamlit_app.spotify_client as sc_module
 
 
 def test_create_playlist(monkeypatch):
-    monkeypatch.setenv("SPOTIPY_CLIENT_ID", "cid")
-    monkeypatch.setenv("SPOTIPY_CLIENT_SECRET", "secret")
-    monkeypatch.setenv("REDIRECT_URI", "http://localhost/callback")
-    sc = reload_module("streamlit_app.spotify_client")
-    client = sc.SpotifyClient()
+    monkeypatch.setattr(sc_module, "SPOTIPY_CLIENT_ID", "cid")
+    monkeypatch.setattr(sc_module, "SPOTIPY_CLIENT_SECRET", "secret")
+    monkeypatch.setattr(sc_module, "REDIRECT_URI", "http://localhost/callback")
+    client = SpotifyClient()
     mock_sp = Mock()
     mock_sp.current_user.return_value = {"id": "u1"}
     mock_sp.user_playlist_create.return_value = {"id": "p1", "name": "name"}
